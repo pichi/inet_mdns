@@ -53,17 +53,17 @@ receiver(Sub) ->
       {getsubs,Pid} ->
           Pid ! {ok,Sub},
           receiver(Sub);
-      stop -> 
+      stop ->
 		   true;
-       AnythingElse -> 
+       AnythingElse ->
 		   io:format("RECEIVED: ~p~n",[AnythingElse]),
            receiver(Sub)
    end.
 
 % process the dns resource records list
-process_dnsrec(_Sub,{error,E}) -> 
+process_dnsrec(_Sub,{error,E}) ->
     io:format("Error: ~p~n", [E]);
-process_dnsrec(Sub,{ok,#dns_rec{anlist=Responses}}) -> 
+process_dnsrec(Sub,{ok,#dns_rec{anlist=Responses}}) ->
     process_dnsrec1(Sub,Responses).
 
 % test to see if a dns_rr.domain is subscribed to
@@ -90,7 +90,7 @@ process_dnsrec1(Sub,[Response|Rest]) ->
                   NewSub = dict:store(SD,dict:new(),Sub),
                   process_dnsrec1(NewSub,[]);
               false ->
-                  % update the dns_rr to the current timestamp 
+                  % update the dns_rr to the current timestamp
                   NewRR = Response#dns_rr{tm=get_timestamp()},
                   NewValue = dict:store(Key,NewRR,Value),
                   NewSub = dict:store(SD,NewValue,Sub),
@@ -99,5 +99,3 @@ process_dnsrec1(Sub,[Response|Rest]) ->
      false ->
           process_dnsrec1(Sub,Rest)
   end.
-		
-		   
