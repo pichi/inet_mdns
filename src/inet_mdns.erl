@@ -61,8 +61,9 @@ receiver(Sub) ->
    end.
 
 % process the dns resource records list
-process_dnsrec(_Sub,{error,E}) ->
-    io:format("Error: ~p~n", [E]);
+process_dnsrec(Sub,{error,E}) ->
+    io:format("Error: ~p~n", [E]), % TODO: Improve error handling (log or such)
+    Sub;
 process_dnsrec(Sub,{ok,#dns_rec{anlist=Responses}}) ->
     process_dnsrec1(Sub,Responses).
 
